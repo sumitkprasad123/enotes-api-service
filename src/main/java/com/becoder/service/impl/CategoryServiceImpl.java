@@ -27,10 +27,16 @@ public class CategoryServiceImpl implements CategoryService {
 	@Override
 	public Boolean saveCategory(CategoryDto categoryDto) {
 		Category category = mapper.map(categoryDto, Category.class);
+		
+		if(ObjectUtils.isEmpty(category.getId())) {
+			category.setIsDeleted(false);
+			category.setCreatedBy(1);
+			category.setCreatedOn(new Date());
+		}else{
+			updateCategory(category);
+		}
 
-		category.setIsDeleted(false);
-		category.setCreatedBy(1);
-		category.setCreatedOn(new Date());
+		
 		Category saveCategory = categoryRepo.save(category);
 		if (ObjectUtils.isEmpty(saveCategory)) {
 			return false;
@@ -38,17 +44,29 @@ public class CategoryServiceImpl implements CategoryService {
 		return true;
 	}
 
+	private void updateCategory(Category category) {
+         Optional<Category> categoryExist = categoryRepo.findById(category.getId());
+         if(categoryExist.isPresent()) {
+        	 Category getCategoryExists = categoryExist.get();
+        	 category.setCreatedBy(getCategoryExists.getCreatedBy());
+        	 category.setCreatedOn(getCategoryExists.getCreatedOn());
+        	 category.setIsDeleted(getCategoryExists.getIsDeleted());
+        	 category.setUpdatedBy(1);
+        	 category.setUpdatedOn(new Date());;
+         }
+	}
+
 	@Override
 	public List<CategoryDto> getAllCategory() {
 
-		List<Category> categories = categoryRepo.findAll();
+		List<Category> categories = categoryRepo.findByIsDeletedFalse();
 		List<CategoryDto> categoryDtoList = categories.stream().map(cat -> mapper.map(cat, CategoryDto.class)).toList();
 		return categoryDtoList;
 	}
 
 	@Override
 	public List<CategoryResponse> getActiveCategory() {
-		List<Category> categories = categoryRepo.findByIsActiveTrue();
+		List<Category> categories = categoryRepo.findByIsActiveTrueAndIsDeletedFalse();
 		List<CategoryResponse> activeCategories = categories.stream()
 				.map(cat -> mapper.map(cat, CategoryResponse.class)).toList();
 		return activeCategories;
@@ -57,7 +75,7 @@ public class CategoryServiceImpl implements CategoryService {
 	@Override
 	public CategoryDto getCategoryById(Integer id) {
 
-		Optional<Category> findByCatgeory = categoryRepo.findById(id);
+		Optional<Category> findByCatgeory = categoryRepo.findByIdAndIsDeletedFalse(id);
 
 		if (findByCatgeory.isPresent()) {
 			Category category = findByCatgeory.get();
