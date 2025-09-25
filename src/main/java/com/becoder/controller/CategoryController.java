@@ -20,6 +20,8 @@ import com.becoder.dto.CategoryResponse;
 import com.becoder.exception.ResourceNotFoundException;
 import com.becoder.service.CategoryService;
 
+import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping("api/v1/category")
 public class CategoryController {
@@ -27,8 +29,9 @@ public class CategoryController {
 	@Autowired
 	private CategoryService categoryService;
 
-	@PostMapping("/save-category")
-	public ResponseEntity<?> saveCategory(@RequestBody CategoryDto categoryDto) {
+	@PostMapping("/save")
+//	public ResponseEntity<?> saveCategory(@Valid @RequestBody CategoryDto categoryDto) {
+	public ResponseEntity<?> saveCategory(@Valid @RequestBody CategoryDto categoryDto) {
 		Boolean saveCategory = categoryService.saveCategory(categoryDto);
 		if (saveCategory) {
 			return new ResponseEntity<>("save success", HttpStatus.CREATED);

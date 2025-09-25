@@ -1,5 +1,8 @@
 package com.becoder.entity;
 
+
+
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -20,10 +23,13 @@ public class Category extends BaseModel {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 
+
 	private String name;
 
+	
 	private String description;
 
+	
 	private Boolean isActive;
 
 	private Boolean isDeleted;
