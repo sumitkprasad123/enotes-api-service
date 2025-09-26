@@ -19,6 +19,7 @@ import com.becoder.dto.CategoryDto;
 import com.becoder.dto.CategoryResponse;
 import com.becoder.exception.ResourceNotFoundException;
 import com.becoder.service.CategoryService;
+import com.becoder.util.CommonUtil;
 
 import jakarta.validation.Valid;
 
@@ -31,12 +32,14 @@ public class CategoryController {
 
 	@PostMapping("/save")
 //	public ResponseEntity<?> saveCategory(@Valid @RequestBody CategoryDto categoryDto) {
-	public ResponseEntity<?> saveCategory(@Valid @RequestBody CategoryDto categoryDto) {
+	public ResponseEntity<?> saveCategory(@RequestBody CategoryDto categoryDto) {
 		Boolean saveCategory = categoryService.saveCategory(categoryDto);
 		if (saveCategory) {
-			return new ResponseEntity<>("save success", HttpStatus.CREATED);
+			return CommonUtil.createBuildResponseMessage("saved success", HttpStatus.CREATED);
+//			return new ResponseEntity<>("save success", HttpStatus.CREATED);
 		} else {
-			return new ResponseEntity<>("not saved", HttpStatus.INTERNAL_SERVER_ERROR);
+			return CommonUtil.createErrorResponseMessage("not saved", HttpStatus.INTERNAL_SERVER_ERROR);
+//			return new ResponseEntity<>("not saved", HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 
@@ -47,7 +50,8 @@ public class CategoryController {
 		if (CollectionUtils.isEmpty(allCategory)) {
 			return ResponseEntity.noContent().build();
 		} else {
-			return new ResponseEntity<>(allCategory, HttpStatus.OK);
+			return CommonUtil.createBuildResponse(allCategory, HttpStatus.OK);
+//			return new ResponseEntity<>(allCategory, HttpStatus.OK);
 		}
 	}
 
@@ -58,29 +62,21 @@ public class CategoryController {
 		if (CollectionUtils.isEmpty(activeCategories)) {
 			return ResponseEntity.noContent().build();
 		} else {
-			return new ResponseEntity<>(activeCategories, HttpStatus.OK);
+			return CommonUtil.createBuildResponse(activeCategories, HttpStatus.OK);
+//			return new ResponseEntity<>(activeCategories, HttpStatus.OK);
 		}
 	}
 
 	@GetMapping("/{id}")
 	public ResponseEntity<?> getCategortDetailsById(@PathVariable Integer id) throws Exception {
 	
-//		try {
-//			CategoryDto categoryDto = categoryService.getCategoryById(id);
-//			if (ObjectUtils.isEmpty(categoryDto)) {
-//				return new ResponseEntity<>("Category not found with Id=" + id, HttpStatus.NOT_FOUND);
-//			}
-//			return new ResponseEntity<>(categoryDto, HttpStatus.OK);
-//		} catch(ResourceNotFoundException e) {
-//			return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
-//		}  catch(Exception e) {
-//			return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-//		}
 		CategoryDto categoryDto = categoryService.getCategoryById(id);
 		if (ObjectUtils.isEmpty(categoryDto)) {
-			return new ResponseEntity<>("Category not found with Id=" + id, HttpStatus.NOT_FOUND);
+			return CommonUtil.createErrorResponseMessage("Category not found with Id=" + id,  HttpStatus.NOT_FOUND);
+//			return new ResponseEntity<>("Category not found with Id=" + id, HttpStatus.NOT_FOUND);
 		}
-		return new ResponseEntity<>(categoryDto, HttpStatus.OK);
+		return CommonUtil.createBuildResponse(categoryDto, HttpStatus.OK);
+//		return new ResponseEntity<>(categoryDto, HttpStatus.OK);
 	
 	}
 
@@ -88,9 +84,11 @@ public class CategoryController {
 	public ResponseEntity<?> deleteCategoryById(@PathVariable Integer id) {
 		Boolean deleted = categoryService.deleteCategory(id);
 		if (deleted) {
-			return new ResponseEntity<>("Category deleted success", HttpStatus.OK);
+			return CommonUtil.createBuildResponseMessage("Category deleted success", HttpStatus.OK);
+//			return new ResponseEntity<>("Category deleted success", HttpStatus.OK);
 		}
-		return new ResponseEntity<>("Category Not deleted", HttpStatus.INTERNAL_SERVER_ERROR);
+		return CommonUtil.createErrorResponseMessage("Category Not deleted", HttpStatus.INTERNAL_SERVER_ERROR);
+//		return new ResponseEntity<>("Category Not deleted", HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
 }

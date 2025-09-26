@@ -13,6 +13,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import com.becoder.util.CommonUtil;
 import com.becoder.util.ValidationException;
 
 import jakarta.validation.ConstraintViolationException;
@@ -22,22 +23,25 @@ import lombok.extern.slf4j.Slf4j;
 @ControllerAdvice
 public class GlobalExceptionHandler {
 	
-//	@ExceptionHandler(Exception.class)
-//	public ResponseEntity<?> handleException(Exception e) {
-//		log.error("GlobalExceptionaHandler :: handleException ::", e.getMessage());
+	@ExceptionHandler(Exception.class)
+	public ResponseEntity<?> handleException(Exception e) {
+		log.error("GlobalExceptionaHandler :: handleException ::", e.getMessage());
+		return CommonUtil.createErrorResponseMessage(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
 //		return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-//	}
+	}
 
 	@ExceptionHandler(NullPointerException.class)
 	public ResponseEntity<?> handleNullPointerException(Exception e) {
 		log.error("GlobalExceptionHandler :: handleNullPointerException ::", e.getMessage());
-		return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+		return CommonUtil.createErrorResponseMessage(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+//		return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 	
 	@ExceptionHandler(ResourceNotFoundException.class)
 	public ResponseEntity<?> handleResourceNotFoundExeption (Exception e){
 		log.error("GlobalExceptionaHandler :: handleResourceNotFoundException ::", e.getMessage());
-		return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+		return CommonUtil.createErrorResponseMessage(e.getMessage(), HttpStatus.NOT_FOUND);
+//		return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
 	}
 	
 	
@@ -52,15 +56,21 @@ public class GlobalExceptionHandler {
 			String field = ((FieldError)(er)).getField();
 			error.put(field, msg);
 		});
- 		
-		return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+		return CommonUtil.createErrorResponse(error, HttpStatus.BAD_REQUEST);
+//		return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
 	}
 	
 	@ExceptionHandler(ValidationException.class)
 	public ResponseEntity<?> handleValidationException(ValidationException e){
-		return new ResponseEntity<>(e.getErrors(), HttpStatus.BAD_REQUEST);
+		return CommonUtil.createErrorResponse(e.getErrors(), HttpStatus.BAD_REQUEST);
+//		return new ResponseEntity<>(e.getErrors(), HttpStatus.BAD_REQUEST);
 	}
 	
+	@ExceptionHandler(ExistDataException.class)
+	public ResponseEntity<?> handleExistDataException(ExistDataException e){
+		return CommonUtil.createErrorResponseMessage(e.getMessage(), HttpStatus.CONFLICT);
+//		return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
+	}
 }
 
 
