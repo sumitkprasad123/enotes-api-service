@@ -13,7 +13,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-
 @Getter
 @Setter
 @AllArgsConstructor
@@ -21,16 +20,19 @@ import lombok.Setter;
 @Entity
 @EntityListeners(AuditingEntityListener.class)
 public class Notes extends BaseModel {
-	
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)	
-  private Integer id;
-  
-  private String title;
-   
-  private String description;
-  
-  @ManyToOne
-  private Category category;
-  
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Integer id;
+
+	private String title;
+
+	private String description;
+
+	@ManyToOne
+	private Category category;
+
+	@ManyToOne
+	private FileDetails fileDetails;
+
 }

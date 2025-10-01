@@ -33,5 +33,4 @@ public abstract class BaseModel {
 	@Column(insertable = false)
 	private Date updatedOn;
 
-
 }

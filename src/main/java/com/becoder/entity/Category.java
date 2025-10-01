@@ -1,8 +1,5 @@
 package com.becoder.entity;
 
-
-
-
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import jakarta.persistence.Entity;
@@ -27,13 +24,10 @@ public class Category extends BaseModel {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 
-
 	private String name;
 
-	
 	private String description;
 
-	
 	private Boolean isActive;
 
 	private Boolean isDeleted;

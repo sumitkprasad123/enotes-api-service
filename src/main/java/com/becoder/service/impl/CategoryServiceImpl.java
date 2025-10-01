@@ -1,6 +1,5 @@
 package com.becoder.service.impl;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,35 +25,33 @@ public class CategoryServiceImpl implements CategoryService {
 
 	@Autowired
 	private ModelMapper mapper;
-	
+
 	@Autowired
 	private Validation validation;
-	
 
 	@Override
 	public Boolean saveCategory(CategoryDto categoryDto) {
-		//Validation Checking
+		// Validation Checking
 		validation.categoryValidation(categoryDto);
-		
-		//check existing category
+
+		// check existing category
 		Boolean exist = categoryRepo.existsByName(categoryDto.getName().trim());
-		if(exist) {
-			//throw error
+		if (exist) {
+			// throw error
 			throw new ExistDataException("category already exist");
-			
+
 		}
-		
+
 		Category category = mapper.map(categoryDto, Category.class);
-		
-		if(ObjectUtils.isEmpty(category.getId())) {
+
+		if (ObjectUtils.isEmpty(category.getId())) {
 			category.setIsDeleted(false);
 //			category.setCreatedBy(1);
 //			category.setCreatedOn(new Date());
-		}else{
+		} else {
 			updateCategory(category);
 		}
 
-		
 		Category saveCategory = categoryRepo.save(category);
 		if (ObjectUtils.isEmpty(saveCategory)) {
 			return false;
@@ -63,15 +60,15 @@ public class CategoryServiceImpl implements CategoryService {
 	}
 
 	private void updateCategory(Category category) {
-         Optional<Category> categoryExist = categoryRepo.findById(category.getId());
-         if(categoryExist.isPresent()) {
-        	 Category getCategoryExists = categoryExist.get();
-        	 category.setCreatedBy(getCategoryExists.getCreatedBy());
-        	 category.setCreatedOn(getCategoryExists.getCreatedOn());
-        	 category.setIsDeleted(getCategoryExists.getIsDeleted());
+		Optional<Category> categoryExist = categoryRepo.findById(category.getId());
+		if (categoryExist.isPresent()) {
+			Category getCategoryExists = categoryExist.get();
+			category.setCreatedBy(getCategoryExists.getCreatedBy());
+			category.setCreatedOn(getCategoryExists.getCreatedOn());
+			category.setIsDeleted(getCategoryExists.getIsDeleted());
 //        	 category.setUpdatedBy(1);
 //        	 category.setUpdatedOn(new Date());
-         }
+		}
 	}
 
 	@Override
@@ -97,7 +94,7 @@ public class CategoryServiceImpl implements CategoryService {
 				.orElseThrow(() -> new ResourceNotFoundException("Category not found with id=" + id));
 
 		if (!ObjectUtils.isEmpty(category)) {
-			if(category.getName() == null) {
+			if (category.getName() == null) {
 				throw new IllegalArgumentException("name is null");
 			}
 			return mapper.map(category, CategoryDto.class);
