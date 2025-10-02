@@ -13,14 +13,14 @@ import com.becoder.service.UserService;
 import com.becoder.util.CommonUtil;
 
 @RestController
-@RequestMapping("/api/v1/user")
+@RequestMapping("/api/v1/auth")
 public class AuthController {
 
 	@Autowired
 	private UserService userService;
 
 	@PostMapping("/save")
-	public ResponseEntity<?> register(@RequestBody UserDto userDto) {
+	public ResponseEntity<?> register(@RequestBody UserDto userDto) throws Exception {
 		Boolean register = userService.register(userDto);
 
 		if (register) {
