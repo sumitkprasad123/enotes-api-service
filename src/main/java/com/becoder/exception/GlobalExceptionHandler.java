@@ -34,6 +34,11 @@ public class GlobalExceptionHandler {
 		return CommonUtil.createErrorResponseMessage(e.getMessage(), HttpStatus.BAD_REQUEST);
 	}
 
+	@ExceptionHandler(SuccessException.class)
+	public ResponseEntity<?> handleSuccessException(SuccessException e) {
+		return CommonUtil.createBuildResponseMessage(e.getMessage(), HttpStatus.OK);
+	}
+
 	@ExceptionHandler(NullPointerException.class)
 	public ResponseEntity<?> handleNullPointerException(Exception e) {
 		log.error("GlobalExceptionHandler :: handleNullPointerException ::", e.getMessage());
