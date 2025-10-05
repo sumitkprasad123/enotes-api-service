@@ -5,10 +5,17 @@ import java.util.UUID;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
+import com.becoder.config.security.CustomUserDetails;
 import com.becoder.dto.EmailRequest;
+import com.becoder.dto.LoginRequest;
+import com.becoder.dto.LoginResponse;
 import com.becoder.dto.UserDto;
 import com.becoder.entity.AccountStatus;
 import com.becoder.entity.Role;
@@ -36,6 +43,12 @@ public class UserServiceImpl implements UserService {
 	@Autowired
 	private EmailService emailService;
 
+	@Autowired
+	private AuthenticationManager authenticationManager;
+
+	@Autowired
+	private BCryptPasswordEncoder passwordEncoder;
+
 	@Override
 	public Boolean register(UserDto userDto, String url) throws Exception {
 
@@ -48,6 +61,9 @@ public class UserServiceImpl implements UserService {
 		AccountStatus status = AccountStatus.builder().isActive(false).verificationCode(UUID.randomUUID().toString())
 				.build();
 		user.setStatus(status);
+
+		// save password with encryption
+		user.setPassword(passwordEncoder.encode(user.getPassword()));
 
 		// save the user in database
 		User saveUser = userRepo.save(user);
@@ -71,13 +87,10 @@ public class UserServiceImpl implements UserService {
 		message = message.replace("[[url]]", url + "/api/v1/home/verify?uid=" + saveUser.getId() + "&&code="
 				+ saveUser.getStatus().getVerificationCode());
 
-		message = message.replace("[[url]]", "/api/v1/home/verify-pswd-link?uid=" + saveUser.getId() + "&&code="
-				+ saveUser.getStatus().getVerificationCode());
-
-		EmailRequest eamilRequest = EmailRequest.builder().to(saveUser.getEmail())
+		EmailRequest emailRequest = EmailRequest.builder().to(saveUser.getEmail())
 				.title("Account creating configuration").subject("Account Created Success").message(message).build();
 
-		emailService.sendEmail(eamilRequest);
+		emailService.sendEmail(emailRequest);
 
 	}
 
@@ -85,6 +98,22 @@ public class UserServiceImpl implements UserService {
 		List<Integer> reqRoleId = userDto.getRoles().stream().map(r -> r.getId()).toList();
 		List<Role> roles = roleRepo.findAllById(reqRoleId);
 		user.setRoles(roles);
+	}
+
+	@Override
+	public LoginResponse login(LoginRequest loginRequest) {
+
+		Authentication authenticate = authenticationManager.authenticate(
+				new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
+
+		if (authenticate.isAuthenticated()) {
+			CustomUserDetails customUserDetails = (CustomUserDetails) authenticate.getPrincipal();
+			String token = "fsvgfsdvgdfbvdfbvvdfbvdfb";
+			LoginResponse loginResponse = LoginResponse.builder()
+					.user(mapper.map(customUserDetails.getUser(), UserDto.class)).token(token).build();
+			return loginResponse;
+		}
+		return null;
 	}
 
 }
