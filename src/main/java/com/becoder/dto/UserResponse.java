@@ -13,8 +13,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class UserDto {
-
+public class UserResponse {
 	private Integer id;
 
 	private String firstName;
@@ -23,9 +22,9 @@ public class UserDto {
 
 	private String email;
 
-	private String password;
-
 	private String mobNo;
+
+	private StatusDto status;
 
 	private List<RoleDto> roles;
 
@@ -39,4 +38,14 @@ public class UserDto {
 		private String name;
 	}
 
+	@Getter
+	@Setter
+	@AllArgsConstructor
+	@NoArgsConstructor
+	@Builder
+	public static class StatusDto {
+		private Integer id;
+
+		private Boolean isActive;
+	}
 }

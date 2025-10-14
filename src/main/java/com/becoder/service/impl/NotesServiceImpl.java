@@ -38,6 +38,7 @@ import com.becoder.repository.FavouriteNoteRepository;
 import com.becoder.repository.FileDetailsRepository;
 import com.becoder.repository.NotesRepository;
 import com.becoder.service.NotesService;
+import com.becoder.util.CommonUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
@@ -183,9 +184,10 @@ public class NotesServiceImpl implements NotesService {
 	}
 
 	@Override
-	public NotesResponse getAllNotesByUser(Integer userId, Integer pageNo, Integer pageSize) {
+	public NotesResponse getAllNotesByUser(Integer pageNo, Integer pageSize) {
 		// 10 = 5,5 = 2 pages
 		Pageable pageable = PageRequest.of(pageNo, pageSize);
+		Integer userId = CommonUtil.getLoggedInUser().getId();
 
 		Page<Notes> pageNotes = notesRepo.findByCreatedByAndIsDeletedFalse(userId, pageable);
 
@@ -218,7 +220,8 @@ public class NotesServiceImpl implements NotesService {
 	}
 
 	@Override
-	public List<NotesDto> getUserRecycleBinNotes(Integer userId) {
+	public List<NotesDto> getUserRecycleBinNotes() {
+		Integer userId = CommonUtil.getLoggedInUser().getId();
 		List<Notes> recycleNotes = notesRepo.findByCreatedByAndIsDeletedTrue(userId);
 		List<NotesDto> notesDtoList = recycleNotes.stream().map(note -> mapper.map(note, NotesDto.class)).toList();
 
@@ -237,8 +240,8 @@ public class NotesServiceImpl implements NotesService {
 	}
 
 	@Override
-	public void emptyRecycleBin(Integer userId) {
-
+	public void emptyRecycleBin() {
+		Integer userId = CommonUtil.getLoggedInUser().getId();
 		List<Notes> recycleNotes = notesRepo.findByCreatedByAndIsDeletedTrue(userId);
 
 		if (!CollectionUtils.isEmpty(recycleNotes)) {
@@ -249,7 +252,7 @@ public class NotesServiceImpl implements NotesService {
 
 	@Override
 	public void favotriteNotes(Integer noteId) throws Exception {
-		int userId = 2;
+		Integer userId = CommonUtil.getLoggedInUser().getId();
 		Notes notes = notesRepo.findById(noteId)
 				.orElseThrow(() -> new ResourceNotFoundException("Notes id not found or Invalid notes id."));
 
@@ -266,7 +269,7 @@ public class NotesServiceImpl implements NotesService {
 
 	@Override
 	public List<FavouriteNoteDto> getUserFavouriteNotes() {
-		int userId = 2;
+		Integer userId = CommonUtil.getLoggedInUser().getId();
 		List<FavouriteNote> favouriteNotes = favouriteNoteRepo.findByUserId(userId);
 		return favouriteNotes.stream().map(fn -> mapper.map(fn, FavouriteNoteDto.class)).toList();
 	}
