@@ -14,9 +14,9 @@ public class CustomUserDetails implements UserDetails {
 
 	private User user;
 
-	public CustomUserDetails(User user2) {
+	public CustomUserDetails(User user) {
 		super();
-		this.user = user2;
+		this.user = user;
 	}
 
 	@Override

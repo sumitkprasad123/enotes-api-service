@@ -1,12 +1,9 @@
 package com.becoder.service;
 
-import com.becoder.dto.LoginRequest;
-import com.becoder.dto.LoginResponse;
-import com.becoder.dto.UserRequest;
+import com.becoder.dto.PasswordChangeRequest;
 
 public interface UserService {
 
-	public Boolean register(UserRequest userDto, String url) throws Exception;
+	public void changePassword(PasswordChangeRequest passwordRequest);
 
-	public LoginResponse login(LoginRequest loginRequest);
 }
