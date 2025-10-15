@@ -75,13 +75,13 @@ public class AuthServiceImpl implements AuthService {
 
 		if (!ObjectUtils.isEmpty(saveUser)) {
 			// send email
-			emailSend(saveUser, url);
+			emailSendForRegister(saveUser, url);
 			return true;
 		}
 		return false;
 	}
 
-	private void emailSend(User saveUser, String url) throws Exception {
+	private void emailSendForRegister(User saveUser, String url) throws Exception {
 
 		String message = "Hi,<b>[[username]]</b>" + "<br> Your account register successfully. <br>"
 				+ "<br> Click the below link verify your account <br>" + "<a href='[[url]]'>Click Here </a><br><br>"
