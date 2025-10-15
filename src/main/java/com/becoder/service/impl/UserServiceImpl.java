@@ -114,6 +114,7 @@ public class UserServiceImpl implements UserService {
 				.orElseThrow(() -> new ResourceNotFoundException("Invalid user"));
 		String encodePassword = passwordEncoder.encode(passwordRestRequest.getNewPassword());
 		user.setPassword(encodePassword);
+		user.getStatus().setPasswordResetToken(null);
 		userRepo.save(user);
 
 	}
