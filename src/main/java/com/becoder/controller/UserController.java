@@ -4,14 +4,11 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.becoder.dto.PasswordChangeRequest;
 import com.becoder.dto.UserResponse;
+import com.becoder.endpoint.UserEndpoint;
 import com.becoder.entity.User;
 import com.becoder.service.UserService;
 import com.becoder.util.CommonUtil;
@@ -20,8 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RestController
-@RequestMapping("/api/v1/user")
-public class UserController {
+public class UserController implements UserEndpoint {
 
 	@Autowired
 	private UserService userService;
@@ -29,7 +25,7 @@ public class UserController {
 	@Autowired
 	private ModelMapper mapper;
 
-	@GetMapping("/profile")
+	@Override
 	public ResponseEntity<?> getProfile() {
 
 		User loggedInUser = CommonUtil.getLoggedInUser();
@@ -37,10 +33,9 @@ public class UserController {
 		return CommonUtil.createBuildResponse(userResponse, HttpStatus.OK);
 	}
 
-	@PostMapping("/change-password")
-	public ResponseEntity<?> changePassword(@RequestBody PasswordChangeRequest passwordChangerequest) {
+	@Override
+	public ResponseEntity<?> changePassword(PasswordChangeRequest passwordChangerequest) {
 		userService.changePassword(passwordChangerequest);
-
 		return CommonUtil.createBuildResponseMessage("Password change Success", HttpStatus.OK);
 	}
 }
