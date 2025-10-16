@@ -1,5 +1,7 @@
 package com.becoder.endpoint;
 
+import static com.becoder.util.Constants.ROLE_USER;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,14 +16,14 @@ import com.becoder.dto.TodoDto;
 public interface TodoEndpoint {
 
 	@PostMapping("/save")
-	@PreAuthorize("hasRole('USER')")
+	@PreAuthorize(ROLE_USER)
 	public ResponseEntity<?> saveTodo(@RequestBody TodoDto todoDto) throws Exception;
 
 	@GetMapping("/{todoId}")
-	@PreAuthorize("hasRole('USER')")
+	@PreAuthorize(ROLE_USER)
 	public ResponseEntity<?> getTodoById(@PathVariable Integer todoId) throws Exception;
 
 	@GetMapping("/list")
-	@PreAuthorize("hasRole('USER')")
+	@PreAuthorize(ROLE_USER)
 	public ResponseEntity<?> getTodoByUser();
 }
