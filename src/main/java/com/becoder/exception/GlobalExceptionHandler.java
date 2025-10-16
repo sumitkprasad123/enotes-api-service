@@ -26,38 +26,38 @@ public class GlobalExceptionHandler {
 
 	@ExceptionHandler(Exception.class)
 	public ResponseEntity<?> handleException(Exception e) {
-		log.error("GlobalExceptionaHandler :: handleException ::", e.getMessage());
+		log.error("GlobalExceptionaHandler : handleException() : {}", e.getMessage());
 		return CommonUtil.createErrorResponseMessage(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-//		return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
 	@ExceptionHandler(IllegalArgumentException.class)
 	public ResponseEntity<?> handleIllegalArgumentException(IllegalArgumentException e) {
+		log.error("GlobalExceptionaHandler : handleIllegalArgumentException() : {}", e.getMessage());
 		return CommonUtil.createErrorResponseMessage(e.getMessage(), HttpStatus.BAD_REQUEST);
 	}
 
 	@ExceptionHandler(AccessDeniedException.class)
 	public ResponseEntity<?> handleAccessDeniedException(AccessDeniedException e) {
+		log.error("GlobalExceptionaHandler : handleAccessDeniedException() : {}", e.getMessage());
 		return CommonUtil.createErrorResponseMessage(e.getMessage(), HttpStatus.FORBIDDEN);
 	}
 
 	@ExceptionHandler(SuccessException.class)
 	public ResponseEntity<?> handleSuccessException(SuccessException e) {
+		log.error("GlobalExceptionaHandler : handleSuccessException() : {}", e.getMessage());
 		return CommonUtil.createBuildResponseMessage(e.getMessage(), HttpStatus.OK);
 	}
 
 	@ExceptionHandler(NullPointerException.class)
 	public ResponseEntity<?> handleNullPointerException(Exception e) {
-		log.error("GlobalExceptionHandler :: handleNullPointerException ::", e.getMessage());
+		log.error("GlobalExceptionaHandler : handleNullPointerException() : {}", e.getMessage());
 		return CommonUtil.createErrorResponseMessage(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-//		return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
 	@ExceptionHandler(ResourceNotFoundException.class)
 	public ResponseEntity<?> handleResourceNotFoundExeption(Exception e) {
-		log.error("GlobalExceptionaHandler :: handleResourceNotFoundException ::", e.getMessage());
+		log.error("GlobalExceptionaHandler : handleResourceNotFoundExeption() : {}", e.getMessage());
 		return CommonUtil.createErrorResponseMessage(e.getMessage(), HttpStatus.NOT_FOUND);
-//		return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
 	}
 
 	@ExceptionHandler(MethodArgumentNotValidException.class)
@@ -70,29 +70,31 @@ public class GlobalExceptionHandler {
 			String field = ((FieldError) (er)).getField();
 			error.put(field, msg);
 		});
+		log.error("GlobalExceptionaHandler : handleMethodArgumentNotValidException() : {}", error);
 		return CommonUtil.createErrorResponse(error, HttpStatus.BAD_REQUEST);
-//		return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
 	}
 
 	@ExceptionHandler(ValidationException.class)
 	public ResponseEntity<?> handleValidationException(ValidationException e) {
+		log.error("GlobalExceptionaHandler : handleValidationException() : {}", e.getErrors());
 		return CommonUtil.createErrorResponse(e.getErrors(), HttpStatus.BAD_REQUEST);
-//		return new ResponseEntity<>(e.getErrors(), HttpStatus.BAD_REQUEST);
 	}
 
 	@ExceptionHandler(ExistDataException.class)
 	public ResponseEntity<?> handleExistDataException(ExistDataException e) {
+		log.error("GlobalExceptionaHandler : handleExistDataException() : {}", e.getMessage());
 		return CommonUtil.createErrorResponseMessage(e.getMessage(), HttpStatus.CONFLICT);
-//		return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
 	}
 
 	@ExceptionHandler(FileNotFoundException.class)
 	public ResponseEntity<?> handleFileNotFoundException(FileNotFoundException e) {
+		log.error("GlobalExceptionaHandler : handleFileNotFoundException() : {}", e.getMessage());
 		return CommonUtil.createErrorResponseMessage(e.getMessage(), HttpStatus.NOT_FOUND);
 	}
 
 	@ExceptionHandler(BadCredentialsException.class)
 	public ResponseEntity<?> handleBadCredentialsException(BadCredentialsException e) {
+		log.error("GlobalExceptionaHandler : handleBadCredentialsException() : {}", e.getMessage());
 		return CommonUtil.createErrorResponseMessage(e.getMessage(), HttpStatus.BAD_REQUEST);
 	}
 }

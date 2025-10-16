@@ -16,7 +16,9 @@ import com.becoder.service.AuthService;
 import com.becoder.util.CommonUtil;
 
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @RestController
 @RequestMapping("/api/v1/auth")
 public class AuthController {
@@ -26,13 +28,16 @@ public class AuthController {
 
 	@PostMapping("/save")
 	public ResponseEntity<?> register(@RequestBody UserRequest userDto, HttpServletRequest request) throws Exception {
+		log.info("AuthController : register() : Exceution start");
 		String url = CommonUtil.getUrl(request);
 		Boolean register = authService.register(userDto, url);
 
-		if (register) {
-			return CommonUtil.createBuildResponse("Registered Success", HttpStatus.CREATED);
+		if (!register) {
+			log.info("Error : {}", " Registered failed.");
+			return CommonUtil.createErrorResponseMessage("Register failed", HttpStatus.INTERNAL_SERVER_ERROR);
 		}
-		return CommonUtil.createErrorResponseMessage("Register failed", HttpStatus.INTERNAL_SERVER_ERROR);
+		log.info("AuthController : register() : Exceution end");
+		return CommonUtil.createBuildResponse("Registered Success", HttpStatus.CREATED);
 	}
 
 	@PostMapping("/login")
