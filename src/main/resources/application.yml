@@ -2,7 +2,7 @@ spring:
   application:
     name: Enotes_API_Service
   profiles: 
-    active: dev
+    active: prod
 
 ---
 # Dev Configuration
@@ -10,6 +10,7 @@ spring:
   config:
     activate:
       on-profile: dev
+
 
   datasource:
     url: jdbc:mysql://localhost:3306/enotes_dev
@@ -40,6 +41,15 @@ spring:
           auth: true
           starttls:
             enable: true            
+
+spring-doc:
+  swagger-ui:
+    operationsSorter: method										
+    tagsSorter: alpha
+    path: /enotes-doc
+  api-docs:
+    path: /enotes-api-doc
+
 
 file:
   upload:
@@ -80,7 +90,16 @@ spring:
         smtp:
           auth: true
           starttls:
-            enable: true            
+            enable: true  
+server:
+  port: 8081
+spring-doc:
+  swagger-ui:
+    operationsSorter: method                    
+    tagsSorter: alpha
+    path: /enotes-doc
+  api-docs:
+    path: /enotes-api-doc			
 
 file:
   upload:
@@ -121,7 +140,16 @@ spring:
         smtp:
           auth: true
           starttls:
-            enable: true            
+            enable: true   
+server:
+  port: 8082         
+spring-doc:
+  swagger-ui:
+    operationsSorter: method                    
+    tagsSorter: alpha
+    path: /enotes-doc
+  api-docs:
+    path: /enotes-api-doc   					
 
 file:
   upload:
@@ -162,7 +190,16 @@ spring:
         smtp:
           auth: true
           starttls:
-            enable: true            
+            enable: true  
+server:
+  port: 8083						          				
+spring-doc:
+  swagger-ui:
+    operationsSorter: method                    
+    tagsSorter: alpha
+    path: /enotes-doc
+  api-docs:
+    path: /enotes-api-doc   
 
 file:
   upload:
